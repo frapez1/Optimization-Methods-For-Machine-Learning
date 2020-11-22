@@ -70,7 +70,7 @@ def Grid_RBF(X_tot, X_test, y_tot, y_test, N_, Sigma, Rho, K, Res):
           omega_RBF = np.concatenate((centers, V), axis = None)
           
           
-          omega_RBF = minimize(RBF_supervised, x0 = omega_RBF, args = (X_train, sigma, par_c, rho, y_train),jac=JAC_RBF_supervised, tol = 1e-9, options = {'maxiter': 100, 'disp': False})
+          omega_RBF = minimize(RBF_supervised, x0 = omega_RBF, args = (X_train, sigma, par_c, rho, y_train),jac=JAC_RBF_supervised, method = 'L-BFGS-B', tol = 1e-9, options = {'maxiter': 100, 'disp': False})
           # print(scipy.optimize.OptimizeResult(omega_MLP))
           e += RBF_supervised_test(omega_RBF.x, X_train, sigma, par_c, rho, y_train)
           e_val += RBF_supervised_test(omega_RBF.x, X_val, sigma, par_c, rho, y_val)

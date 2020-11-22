@@ -61,7 +61,7 @@ omega_RBF = np.concatenate((centers, V), axis = None)
 
 # optimize
 start = time.time()
-omega_RBF = minimize(RBF_supervised, x0 = omega_RBF, args = (X_tot__, sigma, par_c, rho, y_tot_),jac=JAC_RBF_supervised, tol = 1e-9, options = {'maxiter': 100, 'disp': False})
+omega_RBF = minimize(RBF_supervised, x0 = omega_RBF, args = (X_tot__, sigma, par_c, rho, y_tot_),jac=JAC_RBF_supervised, method = 'L-BFGS-B',tol = 1e-9, options = {'maxiter': 100, 'disp': False})
 delta_t = time.time() - start
 
 # evaluate error
@@ -69,13 +69,8 @@ e = RBF_supervised_test(omega_RBF.x, X_tot_, sigma, par_c, rho, y_tot_)
 e_val = RBF_supervised_test(omega_RBF.x, X_test_, sigma, par_c, rho, y_test_)
 
 
-
-#####################################################################
-#####################inserire metodo optim#######################
-#####################################################################
-
 what = ['N','sigma','rho', 'tollerance', 'max_numb_iter', 'optimz_solver', 'nfev', 'niter', 'time', 'train_error', 'test_error' ]
-values_ = [N, sigma, rho, 1e-9, 100, 'none', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
+values_ = [N, sigma, rho, 1e-9, 100, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
 
 
 

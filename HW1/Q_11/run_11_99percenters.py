@@ -57,7 +57,7 @@ omega_MLP = np.concatenate((W1, V), axis = None)
 
 # optimize
 start = time.time()
-omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_tot_, sigma, par, rho, y_tot_),jac=JAC_MLP, tol = 1e-9, options = {'maxiter': 100, 'disp': False})
+omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_tot_, sigma, par, rho, y_tot_),jac=JAC_MLP, method = 'L-BFGS-B', tol = 1e-9, options = {'maxiter': 100, 'disp': False})
 delta_t = time.time() - start
 
 # evaluate error
@@ -65,12 +65,8 @@ e = MLP_test(omega_MLP.x, X_tot_, sigma, par, rho, y_tot_)
 e_val = MLP_test(omega_MLP.x, X_test_, sigma, par, rho, y_test_)
 
 
-#####################################################################
-#####################inserire metodo optim#######################
-#####################################################################
-
 what = ['N','sigma','rho', 'tollerance', 'max_numb_iter', 'optimz_solver', 'nfev', 'niter', 'time', 'train_error', 'test_error' ]
-values_ = [N, sigma, rho, 1e-9, 100, 'none', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
+values_ = [N, sigma, rho, 1e-9, 100, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
 
 
 

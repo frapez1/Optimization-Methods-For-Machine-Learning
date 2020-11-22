@@ -65,7 +65,7 @@ def Grid_MLP(X_tot, X_test, y_tot, y_test, N_, Sigma, Rho, K, Res)
                 V = np.random.randn(N,output_size)
                 par = W1.shape
                 omega_MLP = np.concatenate((W1, V), axis = None)
-                omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP, tol = 1e-9, options = {'maxiter': 100, 'disp': False})
+                omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP, method = 'L-BFGS-B', tol = 1e-9, options = {'maxiter': 100, 'disp': False})
                 e += MLP_test(omega_MLP.x, X_train, sigma, par, rho, y_train)
                 e_val += MLP_test(omega_MLP.x, X_val, sigma, par, rho, y_val)
             Res.append([N,sigma, rho, e/K, e_val/K])
