@@ -52,7 +52,7 @@ omega_RBF = np.concatenate((centers, V), axis = None)
 # optimize
 start = time.time()
 omega_RBF = minimize(RBF_supervised, x0 = omega_RBF, args = (X_tot__, sigma, par_c, rho, y_tot_),jac=JAC_RBF_supervised_v, method = 'L-BFGS-B',tol = 1e-9, options = {'maxiter': 100, 'disp': False})
-delta_t = time.time() - start
+delta_t = time.time() - start 
 
 # evaluate error
 e = RBF_supervised_test(omega_RBF.x, X_tot_, sigma, par_c, rho, y_tot_)
