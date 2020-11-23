@@ -82,7 +82,7 @@ def Grid_MLP(X_tot, X_test, y_tot, y_test, N, sigma, rho, K, Res,input_size,outp
           omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP_v, method = 'L-BFGS-B', tol = 1e-7, options = {'maxiter': 150, 'disp': False})
           e += MLP_test(omega_MLP.x, X_train, sigma, par, rho, y_train)
           e_val += MLP_test(omega_MLP.x, X_val, sigma, par, rho, y_val)
-      Res.append([scale, shift, rho, e/K, e_val/K])
+      Res.append([scale, shift, e/K, e_val/K])
   return Res
 
 
