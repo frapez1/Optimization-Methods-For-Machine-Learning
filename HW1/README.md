@@ -15,4 +15,5 @@
 
 ## Q_31
   - come tutto Q_21
-  - implementare early stopping su numero massimo di epoche, matrice omega che non cambia tanto e validation error
+  - controllare earlystopping train val e test
+  
