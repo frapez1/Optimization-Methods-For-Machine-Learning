@@ -7,7 +7,7 @@
   - run tutto e scegliere valori di N, sigma e rho
 
 ## Q_21 e Q_22
-  - importare tutto da function_ij in maniera furba
+  - V    importare tutto da function_ij in maniera furba
   - Cambiare N, sigma e rho in base a Q_1j
   - Scegliere range sensato per W1
   - run tutto

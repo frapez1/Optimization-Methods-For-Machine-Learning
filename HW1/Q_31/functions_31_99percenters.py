@@ -1,6 +1,13 @@
-
-
-
+import pandas as pd
+import numpy as np
+import scipy
+from scipy.optimize import minimize
+import random
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.mlab as mlab
+from sklearn.model_selection import train_test_split
+import time
 
 
 
@@ -38,7 +45,7 @@ def JAC_MLP_W(omega, X, sigma, par, rho, Y):
   for j in range(par[1]):
     gp_W_jX = g_primo(W_tX[j,:], sigma).transpose()
     for i in range(par[0]):
-      v_jX_i = V[j]*X[i:]
+      v_jX_i = v[j]*X[i:]
       dw[i,j] = np.mean(Y_diff*v_jX_i*gp_W_jX) + 2*rho*w[i,j]
   return np.concatenate((dw, dv), axis = None) 
 

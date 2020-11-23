@@ -6,9 +6,9 @@ import random
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.mlab as mlab
-import numpy as np
 from sklearn.model_selection import train_test_split
 import time
+from functions_31_99percenters import *
 
 df = pd.read_csv('OMML2020_Assignment_1_Dataset.csv')
 
@@ -48,7 +48,9 @@ output_size = 1
 N = 40
 sigma = 0.5
 rho = 0.00001
-epochs = 5
+epochs = 100
+early_stopping_epoch = epochs
+
 
 
 # random weights
@@ -63,11 +65,12 @@ e_val_opt = np.inf
 memory = 0
 omega_MLP_opt = omega_MLP
 
-for ep in epochs:
+
+for ep in range(epochs):
     # optimize V
-    omega_MLP_ = minimize(MLP, x0 = omega_MLP, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP_v, method = 'L-BFGS-B', tol = 1e-9, options = {'maxiter': 100, 'disp': False})
+    omega_MLP_ = minimize(MLP, x0 = omega_MLP, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP_v, tol = 1e-7, method = 'L-BFGS-B',options = {'maxiter': 150, 'disp': False})
     # optimize W1
-    omega_MLP_1 = minimize(MLP, x0 = omega_MLP_, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP_W, method = 'L-BFGS-B', tol = 1e-9, options = {'maxiter': 100, 'disp': False})
+    omega_MLP_1 = minimize(MLP, x0 = omega_MLP_.x, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP_W, tol = 1e-7, method ='L-BFGS-B', options = {'maxiter': 150, 'disp': False})
     
     e_val = MLP_test(omega_MLP_1.x, X_val, sigma, par, rho, y_val)
     #####################################################################
@@ -82,13 +85,15 @@ for ep in epochs:
     else: 
         memory += 1
     
-    if np.linalg.norm(omega_MLP - omega_MLP_1)**2 < 1e-6:
+    if np.linalg.norm(omega_MLP - omega_MLP_1.x)**2 < 1e-6:
+        early_stopping_epoch = ep
         break
     
     if memory == 3:
+        early_stopping_epoch = ep - 3
         break
 
-    omega_MLP = omega_MLP_1
+    omega_MLP = omega_MLP_1.x
 
 omega_MLP = omega_MLP_opt
 delta_t = time.time() - start
@@ -102,8 +107,8 @@ e = MLP_test(omega_MLP.x, X_train, sigma, par, rho, y_train)
 e_val = MLP_test(omega_MLP.x, X_test, sigma, par, rho, y_test)
 
 
-what = ['N','sigma','rho', 'tollerance', 'max_numb_iter', 'optimz_solver', 'nfev', 'niter', 'time', 'train_error', 'test_error' ]
-values_ = [N, sigma, rho, 1e-9, 100, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
+what = ['N','sigma','rho', 'tolerance', 'max_numb_iter', 'max_epoch','early_stopping_epoch','optimz_solver', 'nfev', 'niter', 'time', 'train_error', 'test_error' ]
+values_ = [N, sigma, rho, 1e-7, 150, epochs, early_stopping_epoch, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
 
 
 
@@ -111,7 +116,9 @@ values_ = [N, sigma, rho, 1e-9, 100, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, 
 ##################### print in maniera decente #######################
 #####################################################################
 
+for i in range(len(what)):
+    print('{} = {}'.format(what[i], values_[i]))
 
 
 # plot figure
-# Plot_MLP(omega_MLP.x, sigma, (3,N), rho, 100)
+Plot_MLP(omega_MLP.x, sigma, (3,N), rho, 100)

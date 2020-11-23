@@ -6,9 +6,9 @@ import random
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.mlab as mlab
-import numpy as np
 from sklearn.model_selection import train_test_split
 import time
+from functions_21_99percenters import *
 
 df = pd.read_csv('OMML2020_Assignment_1_Dataset.csv')
 
@@ -50,7 +50,7 @@ omega_MLP = np.concatenate((W1, V), axis = None)
 
 # optimize
 start = time.time()
-omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_tot_, sigma, par, rho, y_tot_),jac=JAC_MLP_v, method = 'L-BFGS-B', tol = 1e-9, options = {'maxiter': 100, 'disp': False})
+omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_tot_, sigma, par, rho, y_tot_),jac=JAC_MLP_v, method = 'L-BFGS-B', tol = 1e-7, options = {'maxiter': 150, 'disp': False})
 delta_t = time.time() - start
 
 # evaluate error
@@ -59,7 +59,8 @@ e_val = MLP_test(omega_MLP.x, X_test_, sigma, par, rho, y_test_)
 
 
 what = ['N','sigma','rho', 'tollerance', 'max_numb_iter', 'optimz_solver', 'nfev', 'niter', 'time', 'train_error', 'test_error' ]
-values_ = [N, sigma, rho, 1e-9, 100, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
+values_ = [N, sigma, rho, 1e-7, 150, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
+
 
 
 
@@ -68,6 +69,11 @@ values_ = [N, sigma, rho, 1e-9, 100, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, 
 #####################################################################
 
 
+for i in range(len(what)):
+    print('{} = {}'.format(what[i], values_[i]))
+
 
 # plot figure
 # Plot_MLP(omega_MLP.x, sigma, (3,N), rho, 100)
+
+Plot_MLP(omega_MLP.x, sigma, (3,N), rho, 100)
