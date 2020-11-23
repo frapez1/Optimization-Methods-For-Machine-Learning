@@ -8,7 +8,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.mlab as mlab
 from sklearn.model_selection import train_test_split
 import time
-from functions_11_99percenters import g,g_primo,MLP,MLP_test,JAC_MLP,Grid_MLP,Plot_3d,MLP_plot,Plot_MLP
+from functions_11_99percenters import *
 
 
 df = pd.read_csv('OMML2020_Assignment_1_Dataset.csv')
@@ -29,13 +29,13 @@ output_size = 1
 # ########################################################
 # # grid search
 # ###
-K = 5
-N_ = [10, 30]
-Sigma = [0.5,4]
-Rho = [0.00001,0.001]
-Res = Grid_MLP(X_tot, X_test, y_tot, y_test, N_, Sigma, Rho, K, [],input_size, output_size)
-R = pd.DataFrame(data=Res, columns=['N','sigma','rho','e','e_val'])
-print(R.sort_values(by=['e_val']).head())
+# K = 5
+# N_ = [20, 25, 30, 35, 40, 45, 50, 55]
+# Sigma = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4]
+# Rho = [0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.01]
+# Res = Grid_MLP(X_tot, X_test, y_tot, y_test, N_, Sigma, Rho, K, [],input_size, output_size)
+# R = pd.DataFrame(data=Res, columns=['N','sigma','rho','e','e_val'])
+# print(R.sort_values(by=['e_val']).head())
 # ########################################################
 
 

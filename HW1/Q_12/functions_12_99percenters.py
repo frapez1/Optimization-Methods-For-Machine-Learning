@@ -1,5 +1,13 @@
-
-
+import pandas as pd
+import numpy as np
+import scipy
+from scipy.optimize import minimize
+import random
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.mlab as mlab
+from sklearn.model_selection import train_test_split
+import time
 
 
 def phi_single_vect(T, sigma):
@@ -13,7 +21,7 @@ def phi_primo(x, c, sigma):
   return 2*np.linalg.norm(x-c)*phi(x, c, sigma)/sigma**2
 
 def Norm_matrix(X, centers, sigma):
-  return np.array([[phi(X[:,k], centers[:,j], sigma) for k in range(X.shape[1])] for j in range(N)])
+  return np.array([[phi(X[:,k], centers[:,j], sigma) for k in range(X.shape[1])] for j in range(centers.shape[1])])
 
 def RBF_supervised(omega, X, sigma, par, rho, Y):
   C = omega[:(par[0]*par[1])].reshape(par) 
@@ -93,12 +101,14 @@ def RBF_supervised_plot(omega, X, sigma, par, rho):
   y_pred = np.dot(v.transpose(), hidden)
   return y_pred
 
-def Plot_RBF(omega, X, sigma, par, rho, punti):
+def Plot_RBF(omega, sigma, par, rho, punti):
   X_p = np.linspace(-2, 2, punti)
   X_ps1 = np.concatenate([X_p for i in range(punti)])
   X_ps2 = np.concatenate([[X_p[j] for i in range(punti)] for j in range(punti)])
   X_ps = np.array([X_ps1, X_ps2])
-  Y_ps = RBF_supervised_plot(omega_RBF.x, X_ps, sigma, par, rho).transpose().reshape(punti**2)
+  Y_ps = RBF_supervised_plot(omega, X_ps, sigma, par, rho).transpose().reshape(punti**2)
   X_ps1, X_ps2, Y_ps = X_ps1.reshape(punti, punti), X_ps2.reshape(punti, punti), Y_ps.reshape(punti, punti)
   Plot_3d(X_ps1, X_ps2, Y_ps)
+
+
 
