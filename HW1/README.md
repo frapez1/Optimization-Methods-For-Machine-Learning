@@ -11,9 +11,9 @@
   - Cambiare N, sigma e rho in base a Q_1j
   - Scegliere range sensato per W1
   - run tutto
-  - Q2 k-means
+  - V    Q2 k-means
 
 ## Q_31
   - come tutto Q_21
-  - controllare earlystopping train val e test
+  - V    controllare earlystopping train val e test
 

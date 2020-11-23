@@ -20,11 +20,7 @@ df['b'] = b
 X_MLP = df[['b', 'X_1','X_2']].to_numpy()
 X_tot, X_test, y_tot, y_test = train_test_split(X_MLP, Y, test_size = 0.15)
 
-# define train and test
-X_tot_ = np.transpose(X_tot)
-X_test_ = np.transpose(X_test)
-y_test_ = y_test.reshape(1,len(y_test))
-y_tot_ = y_tot.reshape(1,len(y_tot))
+
 
 # size 
 input_size = 2 + 1
@@ -42,8 +38,31 @@ N = 40
 sigma = 0.5
 rho = 0.00001
 
+
+
+# ########################################################
+# # Best range W1
+# ###
+# K = 5
+# Scale = [0.5, 2, 5]
+# Shift = [-1, 0, 1]
+# Res = Grid_MLP(X_tot, X_test, y_tot, y_test, N, sigma, rho, K, [],input_size, output_size, Scale, Shift)
+# R = pd.DataFrame(data=Res, columns=['scale','schift','e','e_val'])
+# print(R.sort_values(by=['e_val']).head())
+########################################################
+
+
+scale = 2
+shift = 1
+
+# define train and test
+X_tot_ = np.transpose(X_tot)
+X_test_ = np.transpose(X_test)
+y_test_ = y_test.reshape(1,len(y_test))
+y_tot_ = y_tot.reshape(1,len(y_tot))
+
 # random weights
-W1 = np.random.randn(input_size, N)
+W1 = scale*np.random.randn(input_size, N) + shift
 V = np.random.randn(N,output_size)
 par = W1.shape
 omega_MLP = np.concatenate((W1, V), axis = None)

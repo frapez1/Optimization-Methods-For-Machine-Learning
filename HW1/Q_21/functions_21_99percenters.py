@@ -62,6 +62,31 @@ def Plot_3d(X_ps1, X_ps2, Y_ps):
   plt.show()
 
 
+
+def Grid_MLP(X_tot, X_test, y_tot, y_test, N, sigma, rho, K, Res,input_size,output_size, Scale, Shift):
+  for scale in Scale:
+    for shift in Shift:
+      e_val = 0
+      e = 0
+      for i in range(K):
+          X_train, X_val, y_train, y_val = train_test_split(X_tot, y_tot, test_size = 0.2)
+          X_train = np.transpose(X_train)
+          X_val = np.transpose(X_val)
+          y_train = y_train.reshape(1,len(y_train))
+          y_val = y_val.reshape(1,len(y_val))
+
+          W1 = scale * np.random.randn(input_size, N) + shift
+          V = np.random.randn(N,output_size)
+          par = W1.shape
+          omega_MLP = np.concatenate((W1, V), axis = None)
+          omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP_v, method = 'L-BFGS-B', tol = 1e-7, options = {'maxiter': 150, 'disp': False})
+          e += MLP_test(omega_MLP.x, X_train, sigma, par, rho, y_train)
+          e_val += MLP_test(omega_MLP.x, X_val, sigma, par, rho, y_val)
+      Res.append([scale, shift, rho, e/K, e_val/K])
+  return Res
+
+
+
 def MLP_plot(omega, X, sigma, par, rho):
   w = omega[:(par[0]*par[1])].reshape(par)
   v = omega[(par[0]*par[1]):].reshape((par[1],1))
