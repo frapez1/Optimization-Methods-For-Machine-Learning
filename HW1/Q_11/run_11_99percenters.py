@@ -68,13 +68,8 @@ e_val = MLP_test(omega_MLP.x, X_test_, sigma, par, rho, y_test_)
 what = ['N','sigma','rho', 'tollerance', 'max_numb_iter', 'optimz_solver', 'nfev', 'niter', 'time', 'train_error', 'test_error' ]
 values_ = [N, sigma, rho, 1e-9, 100, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
 
-
-
-#####################################################################
-##################### print in maniera decente #######################
-#####################################################################
-
-
+for i in range(len(what)):
+    print('{} = {}'.format(what[i], values_[i]))
 
 
 # plot figure
