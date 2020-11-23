@@ -1,6 +1,13 @@
-
-
-
+import pandas as pd
+import numpy as np
+import scipy
+from scipy.optimize import minimize
+import random
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.mlab as mlab
+from sklearn.model_selection import train_test_split
+import time
 
 
 
@@ -40,7 +47,7 @@ def JAC_MLP(omega, X, sigma, par, rho, Y):
     gp_W_jX = g_primo(W_tX[j,:], sigma).transpose()
     dv[j] =  np.mean(Y_diff*g_W_jX) + 2*rho*v[j]
     for i in range(par[0]):
-      v_jX_i = V[j]*X[i:]
+      v_jX_i = v[j]*X[i:]
       dw[i,j] = np.mean(Y_diff*v_jX_i*gp_W_jX) + 2*rho*w[i,j]
   return np.concatenate((dw, dv), axis = None) 
 
@@ -48,27 +55,27 @@ def JAC_MLP(omega, X, sigma, par, rho, Y):
 
 
 
-def Grid_MLP(X_tot, X_test, y_tot, y_test, N_, Sigma, Rho, K, Res)
+def Grid_MLP(X_tot, X_test, y_tot, y_test, N_, Sigma, Rho, K, Res,input_size,output_size):
     for N in N_:
         for sigma in Sigma:
             for rho in Rho:
-            e_val = 0
-            e = 0
-            for i in range(K):
-                X_train, X_val, y_train, y_val = train_test_split(X_tot, y_tot, test_size = 0.2)
-                X_train = np.transpose(X_train)
-                X_val = np.transpose(X_val)
-                y_train = y_train.reshape(1,len(y_train))
-                y_val = y_val.reshape(1,len(y_val))
+                e_val = 0
+                e = 0
+                for i in range(K):
+                    X_train, X_val, y_train, y_val = train_test_split(X_tot, y_tot, test_size = 0.2)
+                    X_train = np.transpose(X_train)
+                    X_val = np.transpose(X_val)
+                    y_train = y_train.reshape(1,len(y_train))
+                    y_val = y_val.reshape(1,len(y_val))
 
-                W1 = np.random.randn(input_size, N)
-                V = np.random.randn(N,output_size)
-                par = W1.shape
-                omega_MLP = np.concatenate((W1, V), axis = None)
-                omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP, method = 'L-BFGS-B', tol = 1e-9, options = {'maxiter': 100, 'disp': False})
-                e += MLP_test(omega_MLP.x, X_train, sigma, par, rho, y_train)
-                e_val += MLP_test(omega_MLP.x, X_val, sigma, par, rho, y_val)
-            Res.append([N,sigma, rho, e/K, e_val/K])
+                    W1 = np.random.randn(input_size, N)
+                    V = np.random.randn(N,output_size)
+                    par = W1.shape
+                    omega_MLP = np.concatenate((W1, V), axis = None)
+                    omega_MLP = minimize(MLP, x0 = omega_MLP, args = (X_train, sigma, par, rho, y_train),jac=JAC_MLP, method = 'L-BFGS-B', tol = 1e-9, options = {'maxiter': 100, 'disp': False})
+                    e += MLP_test(omega_MLP.x, X_train, sigma, par, rho, y_train)
+                    e_val += MLP_test(omega_MLP.x, X_val, sigma, par, rho, y_val)
+                Res.append([N,sigma, rho, e/K, e_val/K])
     return Res
 
 

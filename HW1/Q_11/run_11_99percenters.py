@@ -6,9 +6,10 @@ import random
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.mlab as mlab
-import numpy as np
 from sklearn.model_selection import train_test_split
 import time
+from functions_11_99percenters import g,g_primo,MLP,MLP_test,JAC_MLP,Grid_MLP,Plot_3d,MLP_plot,Plot_MLP
+
 
 df = pd.read_csv('OMML2020_Assignment_1_Dataset.csv')
 
@@ -28,13 +29,13 @@ output_size = 1
 # ########################################################
 # # grid search
 # ###
-# K = 5
-# N_ = [10, 20, 30, 40]
-# Sigma = [0.5, 1, 1.5, 2, 2.5,3,4]
-# Rho = [0.00001, 0.0001, 0.001]
-# Res = Grid_MLP(X_tot, X_test, y_tot, y_test, N_, Sigma, Rho, K, [])
-# R = pd.DataFrame(data=Res, columns=['N','sigma','rho','e','e_val'])
-# print(R.sort_values(by=['e_val']).head())
+K = 5
+N_ = [10, 30]
+Sigma = [0.5,4]
+Rho = [0.00001,0.001]
+Res = Grid_MLP(X_tot, X_test, y_tot, y_test, N_, Sigma, Rho, K, [],input_size, output_size)
+R = pd.DataFrame(data=Res, columns=['N','sigma','rho','e','e_val'])
+print(R.sort_values(by=['e_val']).head())
 # ########################################################
 
 
@@ -68,9 +69,15 @@ e_val = MLP_test(omega_MLP.x, X_test_, sigma, par, rho, y_test_)
 what = ['N','sigma','rho', 'tollerance', 'max_numb_iter', 'optimz_solver', 'nfev', 'niter', 'time', 'train_error', 'test_error' ]
 values_ = [N, sigma, rho, 1e-9, 100, 'L-BFGS-B', omega_MLP.nfev, omega_MLP.nit, delta_t,  e, e_val]
 
+
+
+#####################################################################
+##################### print in maniera decente #######################
+#####################################################################
+
 for i in range(len(what)):
     print('{} = {}'.format(what[i], values_[i]))
 
 
 # plot figure
-# Plot_MLP(omega_MLP.x, sigma, (3,N), rho, 100)
+Plot_MLP(omega_MLP.x, sigma, (3,N), rho, 100)
